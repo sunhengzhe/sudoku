@@ -1,13 +1,61 @@
 package com.game.sudoku;
 
+import lombok.Getter;
+import lombok.ToString;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Getter
 public class Sudoku {
     private int[][] cells;
 
+    @Getter
+    @ToString
+    public class Cell {
+        private int row;
+        private int col;
+        private int number;
+
+        public Cell(int row, int col, int number) {
+            this.row = row;
+            this.col = col;
+            this.number = number;
+        }
+    }
+
+    public Sudoku() {
+        cells = new int[9][];
+        for (int i = 0; i < cells.length; i++) {
+            cells[i] = new int[9];
+            for (int j = 0; j < cells[i].length; j++) {
+                cells[i][j] = 0;
+            }
+        }
+    }
+
     public Sudoku(int[][] cells) {
         this.cells = cells;
+    }
+
+    public boolean isValidNumberAt(int row, int col) {
+        int number = cells[row][col];
+
+        if (number == 0) {
+            return false;
+        }
+
+        return isValidNumber(row, col, number);
+    }
+
+    public boolean isValidToPutNumberAt(int row, int col, int number) {
+        int existNumber = cells[row][col];
+
+        if (existNumber != 0) {
+            return false;
+        }
+
+        return isValidNumber(row, col, number);
     }
 
     public boolean isValidNumber(int row, int col, int number) {
@@ -15,14 +63,14 @@ public class Sudoku {
 
         // 行判重
         for (int i = 0; i < rows.length; i++) {
-            if (rows[i] == number) {
+            if (i != col && rows[i] == number) {
                 return false;
             }
         }
 
         // 列判重
         for (int i = 0; i < cells.length; i++) {
-            if (cells[i][col] == number) {
+            if (i != row && cells[i][col] == number) {
                 return false;
             }
         }
@@ -32,7 +80,7 @@ public class Sudoku {
         int startCol = col / 3 * 3;
         for (int i = startRow; i < startRow + 3; i++) {
             for (int j = startCol; j < startCol + 3; j++) {
-                if (cells[i][j] == number) {
+                if (!(i == row && j == col) && cells[i][j] == number) {
                     return false;
                 }
             }
@@ -41,52 +89,61 @@ public class Sudoku {
         return true;
     }
 
-    public boolean resolve() {
-        int emptyRowIndex = 0;
-        int emptyColIndex = 0;
+    public boolean isComplete() {
+        for (int i = 0; i < cells.length; i++) {
+            int[] rows = cells[i];
+            for (int j = 0; j < rows.length; j++) {
+                if (!isValidNumberAt(i, j)) {
+                    return false;
+                }
+            }
+        }
 
-        boolean hasEmptyCell = false;
+        return true;
+    }
 
+    public Cell getNextEmptyCell() {
         for (int i = 0; i < cells.length; i++) {
             int[] rows = cells[i];
             for (int j = 0; j < rows.length; j++) {
                 int number = cells[i][j];
 
                 if (number == 0) {
-                    emptyRowIndex = i;
-                    emptyColIndex = j;
-                    hasEmptyCell = true;
-                    break;
+                    return new Cell(i, j, number);
                 }
-            }
-
-            if (hasEmptyCell) {
-                break;
             }
         }
 
-        if (!hasEmptyCell) {
-            print();
+        return null;
+    }
+
+    public boolean resolve() {
+        Cell nextEmptyCell = getNextEmptyCell();
+
+        if (nextEmptyCell == null) {
             return true;
         }
 
-        boolean isResolved = false;
+        int emptyRowIndex = nextEmptyCell.getRow();
+        int emptyColIndex = nextEmptyCell.getCol();
 
         for (int i = 1; i < 10; i++) {
-            if (isValidNumber(emptyRowIndex, emptyColIndex, i)) {
+            if (isValidToPutNumberAt(emptyRowIndex, emptyColIndex, i)) {
                 cells[emptyRowIndex][emptyColIndex] = i;
-                isResolved = resolve();
 
-                if (!isResolved) {
+                if (resolve()) {
+                    return true;
+                } else {
                     cells[emptyRowIndex][emptyColIndex] = 0;
                 }
             }
         }
 
-        return isResolved;
+
+        return false;
     }
 
-    public List<Integer> getValidNumberSet(int row, int col) {
+    public List<Integer> getValidNumberListAt(int row, int col) {
         int[] rows = cells[row];
 
         Set<Integer> existNumberSet = new HashSet<>();
@@ -135,62 +192,28 @@ public class Sudoku {
     }
 
     public boolean generate() {
-        cells = new int[9][];
-        for (int i = 0; i < cells.length; i++) {
-            cells[i] = new int[9];
-            for (int j = 0; j < cells[i].length; j++) {
-                cells[i][j] = 0;
-            }
-        }
+        Cell nextEmptyCell = getNextEmptyCell();
 
-        return generateLoop();
-    }
-
-    private boolean generateLoop() {
-        int emptyRowIndex = 0;
-        int emptyColIndex = 0;
-
-        boolean hasEmptyCell = false;
-
-        for (int i = 0; i < cells.length; i++) {
-            int[] rows = cells[i];
-            for (int j = 0; j < rows.length; j++) {
-                int number = cells[i][j];
-
-                if (number == 0) {
-                    emptyRowIndex = i;
-                    emptyColIndex = j;
-                    hasEmptyCell = true;
-                    break;
-                }
-            }
-
-            if (hasEmptyCell) {
-                break;
-            }
-        }
-
-        if (!hasEmptyCell) {
-            print();
+        if (nextEmptyCell == null) {
             return true;
         }
 
-        boolean isResolved = false;
+        int emptyRowIndex = nextEmptyCell.getRow();
+        int emptyColIndex = nextEmptyCell.getCol();
 
-        List<Integer> validNumberSet = getValidNumberSet(emptyRowIndex, emptyColIndex);
+        List<Integer> validNumberSet = getValidNumberListAt(emptyRowIndex, emptyColIndex);
 
         for (int validNumber : validNumberSet) {
             cells[emptyRowIndex][emptyColIndex] = validNumber;
-            isResolved = generateLoop();
 
-            if (isResolved) {
-                return isResolved;
+            if (generate()) {
+                return true;
             } else {
                 cells[emptyRowIndex][emptyColIndex] = 0;
             }
         }
 
-        return isResolved;
+        return false;
     }
 
     public void print() {
