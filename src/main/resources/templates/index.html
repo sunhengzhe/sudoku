@@ -4,21 +4,36 @@
 <head>
     <meta charset="UTF-8">
     <title>数独</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
 
     <style>
+        .container {
+            width: 300px;
+            margin: 10px auto;
+        }
+
         .row {
+            margin-bottom: 1px;
             overflow: hidden;
         }
 
         .cell {
             float: left;
-            width: 20px;
-            height: 20px;
-            line-height: 20px;
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
             background: lightskyblue;
-            margin: 1px;
+            margin-right: 1px;
             text-align: center;
             color: #fff;
+        }
+
+        .row:nth-child(3n) {
+            margin-bottom: 5px;
+        }
+
+        .cell:nth-child(3n) {
+            margin-right: 5px;
         }
 
         input {
@@ -36,13 +51,16 @@
 </head>
 <body>
 
-<div th:each="rowIndex : ${#numbers.sequence(0, 8)}" class="row">
-    <div th:each="colIndex : ${#numbers.sequence(0, 8)}" class="cell">
-        <input th:if="${cells[rowIndex][colIndex] eq 0}" />
-        <span th:if="${cells[rowIndex][colIndex] gt 0}" th:text="${cells[rowIndex][colIndex]}"></span>
-    </div>
-</div>
+<div class="container">
 
+    <div th:each="rowIndex : ${#numbers.sequence(0, 8)}" class="row">
+        <div th:each="colIndex : ${#numbers.sequence(0, 8)}" class="cell">
+            <input type="number" th:if="${cells[rowIndex][colIndex] eq 0}" />
+            <span th:if="${cells[rowIndex][colIndex] gt 0}" th:text="${cells[rowIndex][colIndex]}"></span>
+        </div>
+    </div>
+
+</div>
 
 </body>
 </html>
