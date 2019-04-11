@@ -4,8 +4,45 @@
 <head>
     <meta charset="UTF-8">
     <title>数独</title>
+
+    <style>
+        .row {
+            overflow: hidden;
+        }
+
+        .cell {
+            float: left;
+            width: 20px;
+            height: 20px;
+            line-height: 20px;
+            background: lightskyblue;
+            margin: 1px;
+            text-align: center;
+            color: #fff;
+        }
+
+        input {
+            border: none;
+            width: 100%;
+            padding: 0;
+            height: 100%;
+            background: #FF9800;
+            text-align: center;
+            outline: none;
+            font-size: 16px;
+            color: #fff;
+        }
+    </style>
 </head>
 <body>
-<span th:text="#${name}"></span>
+
+<div th:each="rowIndex : ${#numbers.sequence(0, 8)}" class="row">
+    <div th:each="colIndex : ${#numbers.sequence(0, 8)}" class="cell">
+        <input th:if="${cells[rowIndex][colIndex] eq 0}" />
+        <span th:if="${cells[rowIndex][colIndex] gt 0}" th:text="${cells[rowIndex][colIndex]}"></span>
+    </div>
+</div>
+
+
 </body>
 </html>

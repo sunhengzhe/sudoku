@@ -11,16 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/sudoku")
 public class SudokuController {
 
-    @GetMapping
-    public ModelAndView index() {
-        ModelAndView modelAndView = new ModelAndView("/index");
-        modelAndView.addObject("name", "这是首页");
-        return modelAndView;
-    }
-
-    @GetMapping("/api/generate")
-    @ResponseBody
-    public int[][] generate() {
+    public int[][] getSudoku() {
         Sudoku sudoku = new Sudoku();
         sudoku.generate();
 
@@ -39,5 +30,20 @@ public class SudokuController {
         }
 
         return cells;
+    }
+
+    @GetMapping
+    public ModelAndView home() {
+        int[][] cells = getSudoku();
+
+        ModelAndView modelAndView = new ModelAndView("/index");
+        modelAndView.addObject("cells", cells);
+        return modelAndView;
+    }
+
+    @GetMapping("/api/generate")
+    @ResponseBody
+    public int[][] generate() {
+        return getSudoku();
     }
 }
