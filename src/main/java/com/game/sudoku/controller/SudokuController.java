@@ -36,7 +36,7 @@ public class SudokuController {
     public ModelAndView home() {
         int[][] cells = getSudoku();
 
-        ModelAndView modelAndView = new ModelAndView("/index");
+        ModelAndView modelAndView = new ModelAndView("index");
         modelAndView.addObject("cells", cells);
         return modelAndView;
     }
