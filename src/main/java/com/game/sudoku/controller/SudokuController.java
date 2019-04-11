@@ -1,15 +1,25 @@
 package com.game.sudoku.controller;
 
 import com.game.sudoku.vo.Sudoku;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
-@RestController
+@Controller
 @RequestMapping("/sudoku")
 public class SudokuController {
 
     @GetMapping
+    public ModelAndView index() {
+        ModelAndView modelAndView = new ModelAndView("/index");
+        modelAndView.addObject("name", "这是首页");
+        return modelAndView;
+    }
+
+    @GetMapping("/api/generate")
+    @ResponseBody
     public int[][] generate() {
         Sudoku sudoku = new Sudoku();
         sudoku.generate();
