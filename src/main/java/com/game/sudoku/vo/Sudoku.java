@@ -1,4 +1,4 @@
-package com.game.sudoku;
+package com.game.sudoku.vo;
 
 import lombok.Getter;
 import lombok.ToString;
@@ -58,7 +58,7 @@ public class Sudoku {
         return isValidNumber(row, col, number);
     }
 
-    public boolean isValidNumber(int row, int col, int number) {
+    private boolean isValidNumber(int row, int col, int number) {
         int[] rows = cells[row];
 
         // 行判重
@@ -143,30 +143,29 @@ public class Sudoku {
         return false;
     }
 
-    public List<Integer> getValidNumberListAt(int row, int col) {
-        int[] rows = cells[row];
+    public List<Integer> getValidNumberListAt(int rowIndex, int colIndex) {
+        int[] row = cells[rowIndex];
 
         Set<Integer> existNumberSet = new HashSet<>();
 
         // 行
-        for (int i = 0; i < rows.length; i++) {
-            int num = rows[i];
-            if (num > 0) {
-                existNumberSet.add(num);
+        for (int number: row) {
+            if (number > 0) {
+                existNumberSet.add(number);
             }
         }
 
         // 列
-        for (int i = 0; i < cells.length; i++) {
-            int num = cells[i][col];
+        for (int[] rows: cells) {
+            int num = rows[colIndex];
             if (num > 0) {
                 existNumberSet.add(num);
             }
         }
 
         // 单元格
-        int startRow = row / 3 * 3;
-        int startCol = col / 3 * 3;
+        int startRow = rowIndex / 3 * 3;
+        int startCol = colIndex / 3 * 3;
         for (int i = startRow; i < startRow + 3; i++) {
             for (int j = startCol; j < startCol + 3; j++) {
                 int num = cells[i][j];
@@ -184,11 +183,9 @@ public class Sudoku {
 
         Collections.shuffle(allNumberList);
 
-        List<Integer> validNumbers = allNumberList.stream()
-                                              .filter(number -> !existNumberSet.contains(number))
-                                              .collect(Collectors.toList());
-
-        return validNumbers;
+        return allNumberList.stream()
+                            .filter(number -> !existNumberSet.contains(number))
+                            .collect(Collectors.toList());
     }
 
     public boolean generate() {
@@ -217,14 +214,10 @@ public class Sudoku {
     }
 
     public void print() {
-        for (int i = 0; i < cells.length; i++) {
-            int[] rows = cells[i];
-            for (int j = 0; j < rows.length; j++) {
-                int number = cells[i][j];
-
+        for (int[] rows: cells) {
+            for (int number: rows) {
                 System.out.print(number + " ");
             }
-
             System.out.println();
         }
     }

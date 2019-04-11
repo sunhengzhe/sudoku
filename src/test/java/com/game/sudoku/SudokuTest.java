@@ -1,5 +1,6 @@
 package com.game.sudoku;
 
+import com.game.sudoku.vo.Sudoku;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -27,11 +28,11 @@ public class SudokuTest {
         boolean hasExist = sudoku.isValidToPutNumberAt(1, 1, 2);
         boolean validNumber = sudoku.isValidToPutNumberAt(7, 6, 1);
 
-        Assert.assertEquals(false, repeatInRow);
-        Assert.assertEquals(false, repeatInCol);
-        Assert.assertEquals(false, repeatInUnit);
-        Assert.assertEquals(false, hasExist);
-        Assert.assertEquals(true, validNumber);
+        Assert.assertFalse(repeatInRow);
+        Assert.assertFalse(repeatInCol);
+        Assert.assertFalse(repeatInUnit);
+        Assert.assertFalse(hasExist);
+        Assert.assertTrue(validNumber);
     }
 
     @Test
@@ -50,7 +51,7 @@ public class SudokuTest {
 
         boolean isResolved = sudoku.resolve();
 
-        Assert.assertEquals(true, isResolved);
+        Assert.assertTrue(isResolved);
     }
 
     @Test
@@ -69,7 +70,7 @@ public class SudokuTest {
 
         boolean isResolved = sudoku.resolve();
 
-        Assert.assertEquals(false, isResolved);
+        Assert.assertFalse(isResolved);
     }
 
     @Test
@@ -204,6 +205,6 @@ public class SudokuTest {
 
         Sudoku.Cell nextEmptyCell = sudoku.getNextEmptyCell();
 
-        Assert.assertEquals(null, nextEmptyCell);
+        Assert.assertNull(nextEmptyCell);
     }
 }
