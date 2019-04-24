@@ -1,6 +1,7 @@
 package com.game.sudoku.controller;
 
-import com.game.sudoku.vo.Sudoku;
+import com.game.sudoku.entity.StandardSudoku;
+import com.game.sudoku.entity.Sudoku;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,12 +13,12 @@ import org.springframework.web.servlet.ModelAndView;
 public class SudokuController {
 
     public int[][] getSudoku() {
-        Sudoku sudoku = new Sudoku();
+        Sudoku sudoku = new StandardSudoku();
         sudoku.generate();
 
         int[][] cells = sudoku.getCells();
 
-        int clearCount = 40;
+        int clearCount = 5;
 
         while (clearCount > 0) {
             int randomRow = (int)(Math.random() * 9);
