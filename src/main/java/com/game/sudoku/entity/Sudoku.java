@@ -9,20 +9,6 @@ import java.util.*;
 abstract public class Sudoku {
     protected int[][] cells;
 
-    @Getter
-    @ToString
-    public class Cell {
-        private int row;
-        private int col;
-        private int number;
-
-        public Cell(int row, int col, int number) {
-            this.row = row;
-            this.col = col;
-            this.number = number;
-        }
-    }
-
     public Sudoku() {
         cells = new int[9][];
         for (int i = 0; i < cells.length; i++) {

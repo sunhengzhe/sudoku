@@ -1,5 +1,6 @@
 package com.game.sudoku;
 
+import com.game.sudoku.entity.Cell;
 import com.game.sudoku.entity.StandardSudoku;
 import com.game.sudoku.entity.Sudoku;
 import org.junit.Assert;
@@ -163,7 +164,7 @@ public class SudokuTest {
                 {0, 0, 0, 0, 8, 0, 0, 7, 9}
         });
 
-        Sudoku.Cell nextEmptyCell = sudoku.getNextEmptyCell();
+        Cell nextEmptyCell = sudoku.getNextEmptyCell();
 
         Assert.assertEquals(0, nextEmptyCell.getRow());
         Assert.assertEquals(2, nextEmptyCell.getCol());
@@ -184,7 +185,7 @@ public class SudokuTest {
                 {5, 8, 7, 1, 6, 3, 4, 2, 9},
         });
 
-        Sudoku.Cell nextEmptyCell = sudoku.getNextEmptyCell();
+        Cell nextEmptyCell = sudoku.getNextEmptyCell();
 
         Assert.assertNull(nextEmptyCell);
     }
